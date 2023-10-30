@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h> //If we don't have the library beforehand, we need to download it in the repository
 
-const char* ssid     = "小力的iPhone"; //Tried to connect the device to a phone hotspot while testing at home, but did not succeed (unresolved)
-const char* password = "00000000";
+const char* ssid     = "CE-Hub-Student";  //If I try to connect this Wi-Fi, it works
+const char* password = "casa-ce-gagarin-public-service";
 const char* host = "wifitest.adafruit.com";
 
 void setup() {
