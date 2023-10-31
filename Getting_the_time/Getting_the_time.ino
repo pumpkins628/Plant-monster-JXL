@@ -2,7 +2,7 @@
 #include <ezTime.h>
 
 const char* ssid     = "CE-Hub-Student"; //Connect to wifi in the lab
-const char* password = "casa-ce-gagarin-public-service";
+const char* password = "casa-ce-gagarin-public-service";//Notice that if we change places to run this code, we also need to change the WiFi !!
 
 Timezone GB;//Create an object for processing time
 const char* host = "wifitest.adafruit.com";
