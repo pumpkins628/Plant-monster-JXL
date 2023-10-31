@@ -20,15 +20,6 @@ DHT dht(DHTPin, DHTTYPE);   // Initialize DHT sensor.
 
 // Wifi and MQTT
 #include "arduino_secrets.h" 
-/*
-**** please enter your sensitive data in the Secret tab/arduino_secrets.h
-**** using format below
-
-#define SECRET_SSID "ssid name"
-#define SECRET_PASS "ssid password"
-#define SECRET_MQTTUSER "user name - eg student"
-#define SECRET_MQTTPASS "password";
- */
 
 const char* ssid     = SECRET_SSID;
 const char* password = SECRET_PASS;
@@ -61,7 +52,7 @@ void setup() {
   digitalWrite(sensorVCC, LOW);
   pinMode(blueLED, OUTPUT); 
   digitalWrite(blueLED, HIGH);
-
+  inMode(14, OUTPUT);    //Define 14 pins as outputs
   // open serial connection for debug info
   Serial.begin(115200);
   delay(100);
@@ -84,12 +75,19 @@ void setup() {
 void loop() {
   // handler for receiving requests to webserver
   server.handleClient();
-
-  if (minuteChanged()) {
+ if(Moisture>=50)  //If the Moisture is less than 50, the led lights up to remind you to water
+  {
+digitalWrite(14,LOW);
+  }
+  else
+  {
+    digitalWrite(14,HIGH);
+  }
+   delay(5000); //Change the time the information is updated
     readMoisture();
     sendMQTT();
     Serial.println(GB.dateTime("H:i:s")); // UTC.dateTime("l, d-M-y H:i:s.v T")
-  }
+  
   
   client.loop();
 }
