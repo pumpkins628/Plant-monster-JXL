@@ -1,13 +1,5 @@
-/*
-    Get date and time - uses the ezTime library at https://github.com/ropg/ezTime -
-    and then show data from a DHT22 on a web page served by the Huzzah and
-    push data to an MQTT server - uses library from https://pubsubclient.knolleary.net
-
-    Duncan Wilson
-    CASA0014 - 2 - Plant Monitor Workshop
-    May 2020
+/*The function of this code is to connect the ESP8266 to the WiFi network, read the data of the DHT22 temperature and humidity sensor and soil moisture sensor, and then send the data to the server via the MQTT protocol, and provide a simple Web interface to view the sensor data
 */
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ezTime.h>
@@ -18,7 +10,7 @@
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
 // Sensors - DHT22 and Nails
-uint8_t DHTPin = 12;        // on Pin 2 of the Huzzah
+uint8_t DHTPin = 12;        // on Pin 12 of the Huzzah
 uint8_t soilPin = 0;      // ADC or A0 pin on Huzzah
 float Temperature;
 float Humidity;
@@ -31,13 +23,13 @@ DHT dht(DHTPin, DHTTYPE);   // Initialize DHT sensor.
 // Wifi and MQTT
 #include "arduino_secrets.h" 
 /*
-**** please enter your sensitive data in the Secret tab/arduino_secrets.h
-**** using format below
+Create a new file with the following contents:
 
 #define SECRET_SSID "ssid name"
 #define SECRET_PASS "ssid password"
 #define SECRET_MQTTUSER "user name - eg student"
 #define SECRET_MQTTPASS "password";
+The purpose of this is to protect our private information and at the same time to make the main code structure clearer. Once this is done, we can refer to this header file, and the code uploaded on GitHub will not contain information such as passwords
  */
 
 const char* ssid     = SECRET_SSID;
@@ -46,7 +38,7 @@ const char* mqttuser = SECRET_MQTTUSER;
 const char* mqttpass = SECRET_MQTTPASS;
 
 ESP8266WebServer server(80);
-const char* mqtt_server = "mqtt.cetools.org";
+const char* mqtt_server = "mqtt.cetools.org";//MQTT server address
 WiFiClient espClient;
 PubSubClient client(espClient);
 long lastMsg = 0;
@@ -54,7 +46,7 @@ char msg[50];
 int value = 0;
 
 // Date and time
-Timezone GB;
+Timezone GB;  //Same as before to set the time
 
 
 
@@ -94,10 +86,9 @@ void setup() {
 void loop() {
   // handler for receiving requests to webserver
   server.handleClient();
-
   if (minuteChanged()) {
-    readMoisture();
-    sendMQTT();
+    readMoisture();// Read the humidity sensor data
+    sendMQTT();  // Send data to MQTT server
     Serial.println(GB.dateTime("H:i:s")); // UTC.dateTime("l, d-M-y H:i:s.v T")
   }
   
@@ -226,43 +217,10 @@ void startWebserver() {
 void handle_OnConnect() {
   Temperature = dht.readTemperature(); // Gets the values of the temperature
   Humidity = dht.readHumidity(); // Gets the values of the humidity
-  server.send(200, "text/html", SendHTML(Temperature, Humidity, Moisture));
+
 }
 
 void handle_NotFound() {
   server.send(404, "text/plain", "Not found");
 }
 
-String SendHTML(float Temperaturestat, float Humiditystat, int Moisturestat) {
-  String ptr = "<!DOCTYPE html> <html>\n";
-  ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr += "<title>ESP8266 DHT22 Report</title>\n";
-  ptr += "<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-  ptr += "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;}\n";
-  ptr += "p {font-size: 24px;color: #444444;margin-bottom: 10px;}\n";
-  ptr += "</style>\n";
-  ptr += "</head>\n";
-  ptr += "<body>\n";
-  ptr += "<div id=\"webpage\">\n";
-  ptr += "<h1>ESP8266 Huzzah DHT22 Report</h1>\n";
-
-  ptr += "<p>Temperature: ";
-  ptr += (int)Temperaturestat;
-  ptr += " C</p>";
-  ptr += "<p>Humidity: ";
-  ptr += (int)Humiditystat;
-  ptr += "%</p>";
-  ptr += "<p>Moisture: ";
-  ptr += Moisturestat;
-  ptr += "</p>";
-  ptr += "<p>Sampled on: ";
-  ptr += GB.dateTime("l,");
-  ptr += "<br>";
-  ptr += GB.dateTime("d-M-y H:i:s T");
-  ptr += "</p>";
-
-  ptr += "</div>\n";
-  ptr += "</body>\n";
-  ptr += "</html>\n";
-  return ptr;
-}
