@@ -1,26 +1,20 @@
-/*
- *  Simple test to read data from an MQTT server - uses library from https://pubsubclient.knolleary.net
- *  Duncan Wilson 
- *  Jan 2023
- *  
- */
-
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
+#include <PubSubClient.h> //Introduction of the PubSubClient library for MQTT connections
 
 // Wifi and MQTT
 #include "arduino_secrets.h" 
 /*
-**** please enter your sensitive data in the Secret tab/arduino_secrets.h
-**** using format below
+Create a new file with the following contents:
 
 #define SECRET_SSID "ssid name"
 #define SECRET_PASS "ssid password"
 #define SECRET_MQTTUSER "user name - eg student"
 #define SECRET_MQTTPASS "password";
+
+The purpose of this is to protect our private information and at the same time to make the main code structure clearer. Once this is done, we can refer to this header file, and the code uploaded on GitHub will not contain information such as passwords
  */
 
-const char* ssid     = SECRET_SSID;
+const char* ssid     = SECRET_SSID; //The information here is written in a header file named arduino_secrets
 const char* password = SECRET_PASS;
 const char* mqttuser = SECRET_MQTTUSER;
 const char* mqttpass = SECRET_MQTTPASS;
@@ -28,7 +22,7 @@ const char* mqttpass = SECRET_MQTTPASS;
 const char* mqtt_server = "mqtt.cetools.org";
 
 WiFiClient espClient;
-PubSubClient client(espClient);
+PubSubClient client(espClient); //Create PubSubClient
 long lastMsg = 0;
 char msg[50];
 int value = 0;
@@ -102,7 +96,7 @@ void reconnect() {
     if (client.connect(clientId.c_str(), mqttuser, mqttpass)) {
       Serial.println("connected");
       // ... and subscribe to messages on broker
-      client.subscribe("student/CASA0014/plant/ucfnxj0/inTopic");
+      client.subscribe("student/CASA0014/plant/ucfnxj0/inTopic");//Subscribe to the message in MQTT, but remember to change the path to your user name, and the same goes for meeting the user name in the following action
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
