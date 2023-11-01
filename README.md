@@ -1,12 +1,21 @@
 # Plant-monster-JXL
-| Hardware | Description |
+## Section one: Required hardware
+### 1.1 Hardware already in use
+|Hardware |Description |
 | --- | --- |
-| ESP8266 | For connecting to wifi and publish data to MQTT server |
-| DHT22 | Sensor for temperature and humidity |
-| ultrasonic rangefinder | detect movement of any approaches within certain distance |
-| LED bulb | connect with ultrasonic rangefinder to flash |
-| resistor | Limit the voltage to tolerant range |
-| nails | measure resistance between for moisture |
-| Raspberry Pi | Store and visualise the data |
-| Buzzer | Make musical sound and feel happy |
-<img width="1245" alt="1c25e216fad078265321792bb8f1444" src="https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/111eb3d7-eae7-43fe-a884-829a5df802cc">
+| ESP8266 | Connect to wifi and publish data which is caught by sensor to MQTT server |
+| DHT22 | Sensor for temperature and humidity in air|
+| Raspberry Pi | Minicomputer, store and visualise the data in this project|
+| resistor | Limit the voltage to tolerant range, build the circuit, protect the whole system |
+| LED | A light indicates the need for water |
+| nails*2 | Measure the electrical resistance in the soil to get moisture data|
+### 1.2 Hardware plan to use
+|Hardware |Description |
+| --- | --- |
+| Arduino | Connect with ESP8266 to realize serial communication and exchange data |
+| LCD | Show more information about the environment  |
+| Buzzer | Make some music when watering the plant |
+| LED*n | Decorate the whole system |
+| Engine | Shake the small flag to indicate the plant to get enough water |
+## Section two: Work that has been done
+### 2.1 Connecting WiFi
