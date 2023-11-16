@@ -3,24 +3,20 @@ This project utilizes the Feather Huzzah ESP8266 WiFi and Arduino Uno interconne
 
 Additionally, the LCD screen displays real-time data on environmental temperature, humidity, and soil moisture, enabling users to promptly perceive changes in the surroundings. This design delivers watering reminders and furnishes users with comprehensive information on the plant's growth environment. Through this smart system, users can conveniently monitor and manage the plant's growth conditions, enhancing the efficiency and convenience of plant care.
 ## Section one: Required hardware (What I need)
-### 1.1 Hardware already in use
+### 1.1 Required components
 |Hardware |Description |
 | --- | --- |
 | ESP8266 | Connect to wifi and publish data which is caught by sensor to MQTT server |
 | DHT22 | Sensor for temperature and humidity in air|
 | Raspberry Pi | Minicomputer, store and visualise the data in this project|
 | resistor | Limit the voltage to tolerant range, build the circuit, protect the whole system |
-| LED | A light indicates the need for water |
+| red LED | A light indicates the need for water |
 | nails*2 | Measure the electrical resistance in the soil to get moisture data|
-### 1.2 Hardware plan to use
-|Hardware |Description |
-| --- | --- |
 | Arduino | Connect with ESP8266 to realize serial communication and exchange data |
 | LCD | Show more information about the environment  |
 | Buzzer | Make some music when watering the plant |
-| LED*n | Decorate the whole system |
 | Engine | Shake the small flag to indicate the plant to get enough water |
-## Section two: Work that has been done (What I learned)
+## Section two: Work that has been done in workshop (What I learned)
 ### 2.1 Connecting WiFi
 Following the workshop's guidance, we first completed the operation of connecting the ESP8266 development board to the specified Wi-Fi network. This process also includes connecting to a designated host, sending HTTP GET requests, and receiving and printing responses from the server, among other crucial steps. To enhance the visual feedback during this process, we added some output information, such as using a period "." to indicate waiting states during the connection.  ` （See Connecting_to_Wifi for detailed code) ` 
 
@@ -54,7 +50,49 @@ After soldering the entire soil sensor system, we will apply the knowledge we've
 Before using the Raspberry Pi for data storage and display, some preliminary preparations are required. This includes setting up basic information, Influx, Telegraf, and Grafana. During this process, I used PuTTY to perform login and configuration operations. In the end, we can obtain data visualizations as follows. You can see that the data trends are the same on both web pages, which demonstrates that we have visualized the data using different methods.
 
 ![58a5ebf006ea87c56e217f133ad3143](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/0d1568f2-2069-4623-85a7-a0b2540426c2)
-## Section three: Some problems (What I struggled but figured out）
+
+## Section three:More functions I added(what I found interesting)
+
+### 3.1 Intelligent prompt watering system
+
+Through serial communication, I successfully connected ESP8266 to Arduino to transmit the three data acquired by Huzzah to Arduino. By expanding the connections on Arduino to include additional components, the overall functionality and enjoyment of the system are enhanced, contributing to an improved quality of life. Specifically, within the entire system, users have the flexibility to customize the desired soil moisture threshold. I've set the soil moisture range in my sample code from 150 to 230. When the soil moisture falls below 150, the red LED and buzzer connected to Arduino activate simultaneously, signaling the need for watering. The LED, buzzer, and motor remain inactive if the soil moisture is between 150 and 230. However, when the soil moisture exceeds 230, the buzzer emits a different frequency, and the motor starts operating, lifting a flag bearing the inscription "Well Done." To enhance the user experience, we've also incorporated an LCD screen to display real-time environmental data.In this way, people who are not plant experts can take better care of their plants and adjust their plant status according to the changes in the environment.
+
+### 3.2 Design process
+
+#### 3.2.1 Establish a serial port connection
+
+In the ESP8266 section, I customized pins 14 and 16 as a software serial interface to transmit the obtained air temperature, humidity, and soil moisture values. Simultaneously, I utilized Arduino's hardware serial interface to receive this information. Throughout this process, it is crucial to ensure that both sections share the same baud rate and establish a common ground when making connections between them. As we cannot directly observe the success of ESP8266 in transmitting information through serial communication, a validation step is implemented in the Arduino's receiving code. This involves printing all obtained information in the serial monitor to check the success of this step. This validation step is essential to ensure the smooth operation of the system.
+
+![54b3f8894bb9820b8fb5c3923ed1897](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/1810a40c-080f-474d-93cb-3a7a35d4a488)
+
+#### 3.2.2 Implementing functionality using Arduino
+
+First, we need to set up the pins used by the LCD, LED, buzzer, and motor and connect them according to the diagram below. Then, write the logic for the desired functionality .` (See uno_part for detailed code) ` As I couldn't find a motor in the lab, the final product won't showcase the motor and flag functionalities, but you can still refer to the code for their implementation.
+
+It's important to note that the LCD display may exhibit incorrect readings due to unstable wiring or other issues. While ensuring the logical integrity of the code, careful investigation of potential wiring problems is necessary.
+
+### 3.3 End product
+
+**The soil humidity is 103, below the set minimum threshold. The red LED is lit, and the buzzer is sounding.**
+
+![7d9f04388750740d186b0b238d32e73](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/d750c1d2-4df0-4719-9504-b780e1926609)
+
+**The soil humidity is 167, within the set range, and the components remain inactive.**
+
+![33d3daa1250916ccc1939dea2919426](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/f7776481-15c8-4c8f-aa9f-1c317cbdb7bf)
+
+**The soil humidity is 290, exceeding the maximum threshold. The motor starts, and the buzzer is sounding.**
+
+![f2ad3779c3a37966f49b9b1bf611232](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/f49af9f6-a486-4786-b9bf-4cec47a0f902)
+
+**We can also use InfluxDB and Grafana to view our historical data. The charts show that the soil moisture has significantly increased twice in the two days of recorded data, corresponding to the two times I watered the plants. Additionally, I have incorporated different display methods in Grafana to present the data more effectively.**
+
+<img width="1280" alt="dc258ae126e0688657e253e86e10cea" src="https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/e45bcfa1-3789-423e-8729-e34220a01aa8">
+<img width="1280" alt="23622afcc3c18d226076f21bb0ad679" src="https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/cc27001a-92ba-4fdc-9e0f-328b51756b3a">
+<img width="1280" alt="50c6869bea7ff49c2363c214fc3cfdf" src="https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/d5e536ad-545c-4cfc-b6b5-05b9206f5d9c">
+
+## Section four: Some problems I met (What I struggled but figured out）
+
 **1.During the WiFi connection process, I mistakenly connected to the wrong WiFi network, which resulted in a prolonged inability to connect. I also incorrectly assumed it was a network issue, actually there was issue with the code.**
 
 **2.During the testing of MQTT, I forgot to change the username to my own, which led to me being unable to locate the test data I had uploaded.**
@@ -63,7 +101,16 @@ Before using the Raspberry Pi for data storage and display, some preliminary pre
 
 **4.When I was assisting a classmate with the installation of Telegraf, I couldn't find "mqtt_consumer" under "mqtt-data" on the web page. Upon closer inspection, I realized that the username in the code was inconsistent. This taught me the importance of thoroughly reviewing code, including checking for consistency in formatting, both in English and Chinese.**
 
-## Section four：Future plan
+**5.Throughout the project, I encountered some login issues with Grafana, prompting me to reflash the SD card in the Raspberry Pi. Following the guidance from the workshop, I then reinstalled various configurations.**
 
-**Currently, I have made some simple improvements to the ESP8266, adding an output port and connecting an LED. The purpose of this enhancement is to illuminate the LED when the soil moisture falls below a specified value, serving as a reminder to water the plants. ` （See Soil_data for detailed code)  ` In the future, I plan to connect an Arduino to the ESP8266, enabling data exchange between them through serial communication. I also intend to further expand the hardware setup by incorporating additional components like a buzzer, LCD screen, motor, and more. By developing specific code, I aim to achieve the following functionalities: when the plants require watering, a specific melody will play, and the LED will flash. When we adequately water the plants, a different melody will play, and a motor will raise a small flag to indicate sufficient water supply. Furthermore, an LCD screen will provide real-time display of environmental data and other information.**
-![edb95318e1cd69bc1d8c0c47bbd17e2](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/55c09a50-550c-4b32-bfa9-e4a392f8d0d9)
+**6.I faced some challenges configuring serial communication, leading to the initial transmission of mess data. Through continuous fixes of the code, I successfully figured it out. Therefore, it is essential to verify whether Arduino receives the intended content.**
+
+## Section five：Improvement
+
+**1.The sound of the buzzer is too sharp; it can be replaced with gentle music.**
+
+**2.Once the motor is found, it can be added to the entire system.**
+
+**The development of the Internet of Things makes our lives more convenient and better!!**
+
+
