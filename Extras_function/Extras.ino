@@ -7,7 +7,7 @@
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(14,16);
+SoftwareSerial mySerial(14,16); //Two pins are defined to communicate RX and TX as serial ports, where 14 is RX and 16 is TX
 
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
