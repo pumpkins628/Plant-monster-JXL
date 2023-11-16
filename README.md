@@ -69,7 +69,9 @@ In the ESP8266 section, I customized pins 14 and 16 as a software serial interfa
 
 First, we need to set up the pins used by the LCD, LED, buzzer, and motor and connect them according to the diagram below. Then, write the logic for the desired functionality .` (See uno_part for detailed code) ` As I couldn't find a motor in the lab, the final product won't showcase the motor and flag functionalities, but you can still refer to the code for their implementation.
 
-It's important to note that the LCD display may exhibit incorrect readings due to unstable wiring or other issues. While ensuring the logical integrity of the code, careful investigation of potential wiring problems is necessary.
+![e16ecdd5d9b284fd0097aaae54531db](https://github.com/pumpkins628/Plant-monster-JXL/assets/146323702/4b6041bb-4109-482c-8238-89cc2cb35a2f)
+
+**It's important to note that the LCD display may exhibit incorrect readings due to unstable wiring or other issues. While ensuring the logical integrity of the code, careful investigation of potential wiring problems is necessary.**
 
 ### 3.3 End product
 
