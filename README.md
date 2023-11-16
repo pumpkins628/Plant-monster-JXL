@@ -1,4 +1,7 @@
 # Plant-monster-JXL
+This project utilizes the Feather Huzzah ESP8266 WiFi and Arduino Uno interconnected and other hardware components to create an intelligent watering reminder system for plant owners. Different water threshold values can be set for various plant types, with the code specifying a minimum of 150 and a maximum of 230. When the soil humidity falls below 150, the red LED and buzzer connected to Arduino activate simultaneously, alerting the user to the need for watering. In the range of 150 to 230, the LED, buzzer, and motor remain in a dormant state, providing no cues. However, when the soil humidity exceeds 230, the buzzer emits a frequency distinct from the low humidity alert, the motor engages, lifting a flag bearing the inscription 'Well Done.'
+
+Additionally, the LCD screen displays real-time data on environmental temperature, humidity, and soil moisture, enabling users to promptly perceive changes in the surroundings. This design delivers watering reminders and furnishes users with comprehensive information on the plant's growth environment. Through this smart system, users can conveniently monitor and manage the plant's growth conditions, enhancing the efficiency and convenience of plant care.
 ## Section one: Required hardware (What I need)
 ### 1.1 Hardware already in use
 |Hardware |Description |
