@@ -6,16 +6,13 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 // LED, Buzzer, and Motor setup
-const int ledPin = 8;
-const int buzzerPin = 9;
-const int motorPin = 10; // Example pin for motor control
+const int ledPin = 8;  //Pin for LED control
+const int buzzerPin = 9; //Pin for buzzer control
+const int motorPin = 10; // Pin for motor control
 
 // Threshold for soil moisture
-const int moistureThresholdLow = 150;  // 低湿度阈值
-const int moistureThresholdHigh = 200; // 高湿度阈值
-
-// SoftwareSerial for communication
-//SoftwareSerial mySerial(2, 3); // RX, TX
+const int moistureThresholdLow = 150;  // Low moisture threshold
+const int moistureThresholdHigh = 230; // High moisture threshold
 
 // Variables to store sensor data
 float temperature, humidity, soilMoisture;
@@ -58,20 +55,21 @@ void loop() {
 
   if (soilMoisture < moistureThresholdLow) {
     digitalWrite(ledPin, HIGH);
-    tone(buzzerPin, 1000); // 低湿度时发出的声音频率
-    digitalWrite(motorPin, LOW); // 电机控制（flag down）
+    tone(buzzerPin, 1000); // The frequency of sound produced at low moisture
+    digitalWrite(motorPin, LOW); // Flag down
   
   } else if (soilMoisture > moistureThresholdHigh) {
     digitalWrite(ledPin, LOW);
-    tone(buzzerPin, 2000); // 高湿度时发出的声音频率
-    digitalWrite(motorPin, HIGH); // 电机控制（flag up）
+    tone(buzzerPin, 2000); // The frequency of sound produced at high moisture
+    digitalWrite(motorPin, HIGH);// Flag up
+    delay(1000);
     lcd.setCursor(0, 1);
 
   } else {
-    // 在阈值范围内的情况下，可以选择执行其他操作或保持静止
-    digitalWrite(ledPin, LOW);
-    noTone(buzzerPin); // 停止蜂鸣器声音
-    digitalWrite(motorPin, LOW); // 电机保持静止
+    // In the case of the threshold range, you can choose to perform other operations or stay still
+    digitalWrite(ledPin, LOW);//Turn off LED
+    noTone(buzzerPin); // Stop buzzer
+    digitalWrite(motorPin, LOW); // Stop motor
     lcd.setCursor(0, 1);
 
   }
